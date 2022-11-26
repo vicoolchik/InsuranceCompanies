@@ -12,8 +12,8 @@ namespace DTO
         public DateTime IssuedDate { get; set; }
         public DateTime EndDate { get; set; }
         public int CompanyId { get; set; }
-
-        public virtual CompanyDTO Company { get; set; }
+        //public virtual CompanyDTO Company { get; set; }
+        //public string CompanyName { get; set; }
 
         public override string ToString()
         {

@@ -71,5 +71,39 @@ namespace DAL.Concrete
             }
         }
 
+        public CompanyDTO DeleteCompany(CompanyDTO company)
+        {
+            using (var entites = new InsuranceCompaniesContext())
+            {
+                var companyInDB = _mapper.Map<Company>(company);
+                companyInDB = entites.Companies.SingleOrDefault(x => x.Id == company.Id);
+                if (companyInDB != null)
+                {
+                    entites.Companies.Remove(companyInDB);
+                    entites.SaveChanges();
+                    return _mapper.Map<CompanyDTO>(companyInDB);
+                }
+                return null;
+            }
+        }
+
+        public CompanyDTO EditCompany(CompanyDTO company)
+        {
+            using (var entites = new InsuranceCompaniesContext())
+            {
+                var companyInDB = _mapper.Map<Company>(company);
+                companyInDB = entites.Companies.SingleOrDefault(x => x.Id == company.Id);
+                if (companyInDB != null)
+                {
+                    companyInDB.Name = company.Name;
+                    companyInDB.Phone = company.Phone;
+                    companyInDB.Address = company.Address;
+                    entites.SaveChanges();
+                    return _mapper.Map<CompanyDTO>(companyInDB);
+                }
+                return null;
+            }
+        }
+
     }
 }

@@ -30,7 +30,11 @@ namespace DAL.Concrete
         {
             using (var entities = new InsuranceCompaniesContext())
             {
-                var policies = entities.Policies.ToList();
+                //foreach(var policy in entities.Policies)
+                //{
+                //    policy.Company = entities.Companies.SingleOrDefault(c => c.Id == policy.CompanyId);
+                //}
+               var policies = entities.Policies.ToList();
                 return _mapper.Map<List<PolicyDTO>>(policies);
             }
         }
@@ -57,6 +61,41 @@ namespace DAL.Concrete
             {
                 var policyInDB = _mapper.Map<Policy>(policy);
                 policyInDB = entites.Policies.SingleOrDefault(x => x.Id == id);
+                if (policyInDB != null)
+                {
+                    policyInDB.Price = policy.Price;
+                    policyInDB.IssuedDate = policy.IssuedDate;
+                    policyInDB.EndDate = policy.EndDate;
+                    policyInDB.CompanyId = policy.CompanyId;
+                    entites.SaveChanges();
+                    return _mapper.Map<PolicyDTO>(policyInDB);
+                }
+                return null;
+            }
+        }
+
+        public PolicyDTO DeletePolicy(PolicyDTO policy)
+        {
+            using (var entites = new InsuranceCompaniesContext())
+            {
+                var policyInDB = _mapper.Map<Policy>(policy);
+                policyInDB = entites.Policies.SingleOrDefault(x => x.Id == policy.Id);
+                if (policyInDB != null)
+                {
+                    entites.Policies.Remove(policyInDB);
+                    entites.SaveChanges();
+                    return _mapper.Map<PolicyDTO>(policyInDB);
+                }
+                return null;
+            }
+        }
+
+        public PolicyDTO EditPolicy(PolicyDTO policy)
+        {
+            using (var entites = new InsuranceCompaniesContext())
+            {
+                var policyInDB = _mapper.Map<Policy>(policy);
+                policyInDB = entites.Policies.SingleOrDefault(x => x.Id == policy.Id);
                 if (policyInDB != null)
                 {
                     policyInDB.Price = policy.Price;
